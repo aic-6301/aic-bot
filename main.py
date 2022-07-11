@@ -5,10 +5,8 @@ from tkinter import E
 import discord
 from discord.ext import commands
 import os
-from os import getenv
 import traceback
 import sys
-import cogs as tenki
 import datetime
 
 
