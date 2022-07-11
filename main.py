@@ -4,6 +4,7 @@ from distutils import extension
 import discord
 from discord.ext import commands
 import os
+from os import getenv
 import traceback
 import sys
 import datetime
@@ -152,5 +153,5 @@ async def ping(ctx):
     await ctx.send(f'pong!{round(bot.latency*1000)} msです')
 
 
-# token = getenv('DISCORD_BOT_TOKEN')
+token = getenv('DISCORD_BOT_TOKEN')
 bot.run('OTczOTI4NzkzMTU0NjYyNDEw.GjWaR2.YJrhAsrSjM_I8-O9Xot5Ws4kejhFzCJWThA3Sg')
