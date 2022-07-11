@@ -1,5 +1,3 @@
 discord
 discord.py
-os
-traceback
 datetime
