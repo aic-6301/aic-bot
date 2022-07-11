@@ -1,6 +1,3 @@
-from copy import error
-from decimal import ExtendedContext
-from distutils import extension
 import discord
 from discord.ext import commands
 import os
@@ -30,7 +27,7 @@ async def greet():
     channel = bot.get_channel(online_ch)
     embed = discord.Embed(title='起動通知', description='起動したよ！！！', footer=f'現在の時刻：{datetime}')
     await channel.send(embed=embed)
- 
+
 # ready
 @bot.event
 async def on_ready():
@@ -93,32 +90,32 @@ async def change_prefix(ctx, new_prefix: str = None):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, discord.ext.commands.errors.MissingPermissions):
-        embed = discord.Embed(title=":x: 失敗 -MissingPermissions", description=f"実行者の必要な権限が無いため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Colour.red())
+        embed = discord.Embed(title=":x: 失敗 -MissingPermissions", description=f"実行者の必要な権限が無いため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed)
     elif isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
-        embed = discord.Embed(title=":x: 失敗 -BotMissingPermissions", description=f"Botの必要な権限が無いため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Colour.red())
+        embed = discord.Embed(title=":x: 失敗 -BotMissingPermissions", description=f"Botの必要な権限が無いため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed)
     elif isinstance(error, discord.ext.commands.errors.CommandNotFound):
-        embed = discord.Embed(title=":x: 失敗 -CommandNotFound", description=f"不明なコマンドもしくは現在使用不可能なコマンドです。", timestamp=ctx.message.created_at, color=discord.Colour.red())
+        embed = discord.Embed(title=":x: 失敗 -CommandNotFound", description=f"不明なコマンドもしくは現在使用不可能なコマンドです。", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed)
     elif isinstance(error, discord.ext.commands.errors.MemberNotFound):
-        embed = discord.Embed(title=":x: 失敗 -MemberNotFound", description=f"指定されたメンバーが見つかりません。", timestamp=ctx.message.created_at, color=discord.Colour.red())
+        embed = discord.Embed(title=":x: 失敗 -MemberNotFound", description=f"指定されたメンバーが見つかりません。", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed)
     elif isinstance(error, discord.ext.commands.errors.BadArgument):
-        embed = discord.Embed(title=":x: 失敗 -BadArgument", description=f"指定された引数がエラーを起こしているため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Colour.red())
+        embed = discord.Embed(title=":x: 失敗 -BadArgument", description=f"指定された引数がエラーを起こしているため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed) 
     elif isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
-        embed = discord.Embed(title=":x: 失敗 -BadArgument", description=f"指定された引数が足りないため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Colour.red())
+        embed = discord.Embed(title=":x: 失敗 -BadArgument", description=f"指定された引数が足りないため実行出来ません。", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed) 
     else:
         error
-        embed = discord.Embed(title=":x: 失敗 -BadArgument", description=f"不明なエラーが発生しました。", timestamp=ctx.message.created_at, color=discord.Colour.red())
+        embed = discord.Embed(title=":x: 失敗 -BadArgument", description=f"不明なエラーが発生しました。", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed) 
         raise error
@@ -126,14 +123,14 @@ async def on_command_error(ctx, error):
 
 
 
-#serverinfo
+# serverinfo
 @bot.command()
 async def serverinfo(ctx):
     guild = 984807772333932594
     roles =[role for role in guild.role]
     text_channels = [text_channels for text_channels in guild.text_channels]
     #embedのないよう
-    embed = discord.Embed(title=f"サーバー情報 - {guild.name}",timestamp=ctx.message.created_at,color=discord.Colour.purple(),inline=False)
+    embed = discord.Embed(title=f"サーバー情報 - {guild.name}",timestamp=ctx.message.created_at,color=discord.Color.purple(),inline=False)
     embed.set.thumbnail(url=ctx.guild.icon.url)
     embed.add_field(name="サーバー名",value=f"{guild.name}",inline=False)
     embed.add_field(name="サーバー地域",value=f"{ctx.guild.region}",inline=False)
@@ -146,12 +143,12 @@ async def serverinfo(ctx):
     embed.set_footer(text=f"実行者：{ctx.author} ",icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 # 天気読み込み
-# ./cogs/tenli.pyにかくよてい
+#TODO: ./cogs/tenki.pyにかくよてい
 # ping
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'pong!{round(bot.latency*1000)} msです')
 
 
-token = getenv('DISCORD_BOT_TOKEN')
-bot.run('OTczOTI4NzkzMTU0NjYyNDEw.GjWaR2.YJrhAsrSjM_I8-O9Xot5Ws4kejhFzCJWThA3Sg')
+#token = getenv('DISCORD_BOT_TOKEN')
+bot.run("OTk2MDUwODM3NDY4MTA2ODIy.GUH3WN.ytTyuHyGSHOlQ9LhNVBla6-ZrweJT-LOdIU4Qc")

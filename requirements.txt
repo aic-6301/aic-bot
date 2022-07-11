@@ -1,3 +1,6 @@
 discord
 discord.py
+os
+traceback
 datetime
+youtube_dl
