@@ -1,7 +1,6 @@
 from copy import error
 from decimal import ExtendedContext
 from distutils import extension
-from tkinter import E
 import discord
 from discord.ext import commands
 import os
