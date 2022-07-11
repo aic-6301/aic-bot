@@ -1,1 +1,1 @@
-discordbot: python main.py
+mainpy: python main.py
