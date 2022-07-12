@@ -12,7 +12,7 @@ class bots(commands.Cog):
 
 @commands.command()
 async def help(self,ctx):
-    embed = discord.Embed(title=f"help",timestamp=ctx.message.created_at,color=discord.Color.purple(),inline=False)
+    embed = discord.Embed(title=f"help",timestamp=ctx.message.created_at,color=discord.Colour.purple(),inline=False)
     embed.set.thumbnail(url=ctx.guild.icon.url)
     #embed.add_field(vaule=f"このbotのプレフィックスは「{}」です。コマンドの前につけてください")
     embed.add_field(name="help",value=f"このコマンドです。\nbotのコマンドについて書かれています、",inline=False)
@@ -71,4 +71,3 @@ async def shutdown(self, ctx):
 
 def setup(bot):
     bot.add_cog(bots(bot))
-

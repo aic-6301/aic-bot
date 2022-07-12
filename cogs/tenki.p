@@ -53,11 +53,11 @@ citycodes = {
     "大分":"440010",
     "宮崎":"450010",
     "鹿児島":"460010",
-    "沖縄":"471010",    
+    "沖縄":"471010",
 }
 
  # 取得
-    
+
 @commands.command()
 async def tenki(self,message):
   reg_res = re.compile.search(message.content)

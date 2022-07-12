@@ -9,7 +9,7 @@ import datetime
 
 BACKUP_CHANNEL_ID = 995463878257430558
 DEFAULT_PREFIX = 'a!'
-TOKEN = 'token'
+TOKEN = 'OTczOTI4NzkzMTU0NjYyNDEw.GnJsmq.qeOKgsH7DVisuQd6pXWbpa95qOfKzvbvZNvHeM'
 
 def _change_command_prefix(bot: commands.Bot, msg: discord.Message):
     if str(msg.guild.id) in prefix_dict.keys():
@@ -19,9 +19,8 @@ def _change_command_prefix(bot: commands.Bot, msg: discord.Message):
 
 online_ch = 995966254512885840
 bot = commands.Bot(command_prefix=_change_command_prefix, activity=discord.Activity(name='Aicybot', type=discord.ActivityType.playing), status="idle")
-bot.remove_command("help")
+#bot.remove_command("help")
 
-INITIAL_EXTENSIONS = ["cogs.tenki", "cogs.bot"]
 
 async def greet():
     channel = bot.get_channel(online_ch)
@@ -114,36 +113,67 @@ async def on_command_error(ctx, error):
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed) 
     else:
-        error
-        embed = discord.Embed(title=":x: 失敗 -BadArgument", description=f"不明なエラーが発生しました。", timestamp=ctx.message.created_at, color=discord.Color.red())
-        embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
-        await ctx.send(embed=embed) 
+        ch = 996370412239855667
+        embed = discord.Embed(title="エラー情報", description="")
+        embed.add_field(name="エラー発生サーバー名", value=ctx.guild.name, inline=False)
+        embed.add_field(name="エラー発生サーバーID", value=ctx.guild.id, inline=False)
+        embed.add_field(name="エラー発生ユーザー名", value=ctx.author.name, inline=False)
+        embed.add_field(name="エラー発生ユーザーID", value=ctx.author.id, inline=False)
+        embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
+
+        t = f"```py\n{''.join(traceback.TracebackException.from_exception(error))}```"
+        embed.add_field(name="発生エラー", value=t if len(t < 2048) else f"```py\n{error}\n```", inline=False)
+
+        m = await bot.get_channel(ch).send(embed=embed)
+        await ctx.send(discord.Embed(title="エラーが発生しました", description="何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときは下記のエラーIDも一緒にお知らせください").set_footer(text="エラーid:{m.id}"))
         raise error
 
 
 
 
-# serverinfo
+# restart
+def restart_bot(): 
+  os.exec(sys.executable, ['python'] + sys.argv)
+
+@bot.command(name= 'restart')
+@commands.is_owner()
+async def restart(ctx):
+  await ctx.send("再起動中...(数秒で完了します)")
+  restart_bot()
+
+
+
+#loader
 @bot.command()
-async def serverinfo(ctx):
-    guild = 984807772333932594
-    roles =[role for role in guild.role]
-    text_channels = [text_channels for text_channels in guild.text_channels]
-    #embedのないよう
-    embed = discord.Embed(title=f"サーバー情報 - {guild.name}",timestamp=ctx.message.created_at,color=discord.Color.purple(),inline=False)
-    embed.set.thumbnail(url=ctx.guild.icon.url)
-    embed.add_field(name="サーバー名",value=f"{guild.name}",inline=False)
-    embed.add_field(name="サーバー地域",value=f"{ctx.guild.region}",inline=False)
-    embed.add_field(name="サーバー設立日",value=f"{guild.created.at}",inline=False)
-    embed.add_field(name="サーバーオーナー",value=f"{guild.owner}",inline=False)
-    embed.add_field(name="チャンネル数",value=f"{len(text_channels)}",inline=False)
-    embed.add_field(name="ロール数",value=f"{guild.role}",inline=False)
-    embed.add_field(name="サーバーブースト数",value=guild.premium_subscription_count,inline=False)
-    embed.add_field(name="メンバー数",value=guild.member_count,inline=False)
-    embed.set_footer(text=f"実行者：{ctx.author} ",icon_url=ctx.author.avatar_url)
+@commands.is_owner()
+async def load(ctx, extension):
+    bot.load_extension(f"cogs.{extension}")
+    embed = discord.Embed(title="load!", description=f'{extension} loaded!', color=0xff00c8)
     await ctx.send(embed=embed)
-# 天気読み込み
-#TODO: ./cogs/tenki.pyにかくよてい
+
+#unloader
+@bot.command()
+@commands.is_owner()
+async def unload(ctx, extension):
+    bot.unload_extension(f"cogs.{extension}")
+    embed = discord.Embed(title="unload!", description=f'{extension} unloaded!', color=0xff00c8)
+    await ctx.send(embed=embed)
+#reload
+@bot.command()
+@commands.is_owner()
+async def reload(ctx, extension):
+    bot.reload_extension(f"cogs.{extension}")
+    embed = discord.Embed(title='Reload', description=f'{extension} successfully reloaded', color=0xff00c8)
+    await ctx.send(embed=embed)
+
+
+@bot.command()
+@commands.is_owner()
+async def shutdown(ctx):
+  await ctx.send('bye!:wave:')
+  print(quit())
+
+
 # ping
 @bot.command()
 async def ping(ctx):
@@ -151,4 +181,4 @@ async def ping(ctx):
 
 
 #token = getenv('DISCORD_BOT_TOKEN')
-bot.run("OTk2MDUwODM3NDY4MTA2ODIy.GUH3WN.ytTyuHyGSHOlQ9LhNVBla6-ZrweJT-LOdIU4Qc")
+bot.run(TOKEN)
