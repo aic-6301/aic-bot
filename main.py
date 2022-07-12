@@ -9,7 +9,7 @@ import datetime
 
 BACKUP_CHANNEL_ID = 995463878257430558
 DEFAULT_PREFIX = 'a!'
-TOKEN = 'OTczOTI4NzkzMTU0NjYyNDEw.GnJsmq.qeOKgsH7DVisuQd6pXWbpa95qOfKzvbvZNvHeM'
+TOKEN = 'token'
 
 def _change_command_prefix(bot: commands.Bot, msg: discord.Message):
     if str(msg.guild.id) in prefix_dict.keys():
