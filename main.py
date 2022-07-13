@@ -4,12 +4,16 @@ import os
 from os import getenv
 import traceback
 import sys
-import datetime
-
+from datetime import datetime
+from jishaku.features.python import PythonFeature
+from jishaku.features.root_command import RootCommand
+import requests
+from discord_buttons_plugin import *
 
 BACKUP_CHANNEL_ID = 995463878257430558
 DEFAULT_PREFIX = 'a!'
-TOKEN = 'token'
+TOKEN = 'OTczOTI4NzkzMTU0NjYyNDEw.GomW1Z.NbEnjHGM-5MHCO8C9RAJA0BFQLPkGeGqjilvMk'
+owner_id = 964887498436276305
 
 def _change_command_prefix(bot: commands.Bot, msg: discord.Message):
     if str(msg.guild.id) in prefix_dict.keys():
@@ -24,13 +28,13 @@ bot = commands.Bot(command_prefix=_change_command_prefix, activity=discord.Activ
 
 async def greet():
     channel = bot.get_channel(online_ch)
-    embed = discord.Embed(title='起動通知', description='起動したよ！！！', footer=f'現在の時刻：{datetime}')
+    embed = discord.Embed(title='起動通知', description=f'起動したよ！！！\n現在の時刻:{datetime.now()}')
     await channel.send(embed=embed)
 
 # ready
 @bot.event
 async def on_ready():
-
+    bot.load_extension('jishaku')
     global backup_ch
     global prefix_dict
 
@@ -81,9 +85,52 @@ async def change_prefix(ctx, new_prefix: str = None):
         await ctx.send(embed=discord.Embed(title='このサーバーのプレフィックスが変更されたよ！', description=f'default({DEFAULT_PREFIX}) -> {prefix_dict[guild_id]}'))
         return
 
+class MyBot(commands.Bot):
+    async def is_owner(self, user: discord.User):
+        if something: 
+            return True
+
+        return await super().is_owner(user)
+#このクラスを読み込むことでbot作成者のみがjishakuを利用できるようになる(推奨
 
 
+@bot.event
+async def on_member_join(member):
+    channel = member.system_channel
+    
+    await channel.send(f"{member.name}が入室しました！")
 
+
+buttons = ButtonsClient(bot)
+@buttons.click
+async def button_ephemeral(ctx):
+	await ctx.reply("このメッセージはあなたにしか見えていません！", flags = MessageFlags().EPHEMERAL)
+
+@buttons.click
+async def button_hello(ctx):
+	await ctx.reply("こんにちは！")
+
+@bot.command()
+async def create(ctx):
+	await buttons.send(
+		content = "テストボタン", 
+		channel = ctx.channel.id,
+		components = [
+			ActionRow([
+				Button(
+					label="Hello", 
+					style=ButtonType().Primary, 
+					custom_id="button_hello"
+				)
+			]),ActionRow([
+				Button(
+					label="Ephemeral",
+					style=ButtonType().Danger,
+					custom_id="button_ephemeral"
+				)
+			])
+		]
+	)
 
 # えらー
 @bot.event
@@ -113,19 +160,17 @@ async def on_command_error(ctx, error):
         embed.set_footer(text="お困りの場合は、サーバー管理者をメンションしてください。")
         await ctx.send(embed=embed) 
     else:
+       async def on_command_error(ctx, error):
         ch = 996370412239855667
-        embed = discord.Embed(title="エラー情報", description="")
+        embed = discord.Embed(title="エラー情報", description="", color=0xf00)
         embed.add_field(name="エラー発生サーバー名", value=ctx.guild.name, inline=False)
         embed.add_field(name="エラー発生サーバーID", value=ctx.guild.id, inline=False)
         embed.add_field(name="エラー発生ユーザー名", value=ctx.author.name, inline=False)
         embed.add_field(name="エラー発生ユーザーID", value=ctx.author.id, inline=False)
         embed.add_field(name="エラー発生コマンド", value=ctx.message.content, inline=False)
-
-        t = f"```py\n{''.join(traceback.TracebackException.from_exception(error))}```"
-        embed.add_field(name="発生エラー", value=t if len(t < 2048) else f"```py\n{error}\n```", inline=False)
-
+        embed.add_field(name="発生エラー", value=error, inline=False)
         m = await bot.get_channel(ch).send(embed=embed)
-        await ctx.send(discord.Embed(title="エラーが発生しました", description="何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときは下記のエラーIDも一緒にお知らせください").set_footer(text="エラーid:{m.id}"))
+        await ctx.send(f"何らかのエラーが発生しました。ごめんなさい。\nこのエラーについて問い合わせるときはこのコードも一緒にお知らせください：{m.id}")
         raise error
 
 
@@ -135,7 +180,7 @@ async def on_command_error(ctx, error):
 def restart_bot(): 
   os.exec(sys.executable, ['python'] + sys.argv)
 
-@bot.command(name= 'restart')
+@bot.command(name= 'restart', hide=True)
 @commands.is_owner()
 async def restart(ctx):
   await ctx.send("再起動中...(数秒で完了します)")
@@ -144,7 +189,7 @@ async def restart(ctx):
 
 
 #loader
-@bot.command()
+@bot.command(hide=True)
 @commands.is_owner()
 async def load(ctx, extension):
     bot.load_extension(f"cogs.{extension}")
@@ -152,14 +197,14 @@ async def load(ctx, extension):
     await ctx.send(embed=embed)
 
 #unloader
-@bot.command()
+@bot.command(hide=True)
 @commands.is_owner()
 async def unload(ctx, extension):
     bot.unload_extension(f"cogs.{extension}")
     embed = discord.Embed(title="unload!", description=f'{extension} unloaded!', color=0xff00c8)
     await ctx.send(embed=embed)
 #reload
-@bot.command()
+@bot.command(hide=True)
 @commands.is_owner()
 async def reload(ctx, extension):
     bot.reload_extension(f"cogs.{extension}")
@@ -167,9 +212,9 @@ async def reload(ctx, extension):
     await ctx.send(embed=embed)
 
 
-@bot.command()
+@bot.command(hide=True)
 @commands.is_owner()
-async def shutdown(ctx):
+async def down(ctx):
   await ctx.send('bye!:wave:')
   print(quit())
 
