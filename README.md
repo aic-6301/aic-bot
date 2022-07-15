@@ -8,20 +8,23 @@
 
 ## 各種ファイル情報
 
-### discordbot.py
+### main.py
 PythonによるDiscordBotのアプリケーションファイルです。
 
 ### requirements.txt
-使用しているPythonのライブラリ情報の設定ファイルです。
+なんか色々入れるやつです
 
 ### Procfile
-Herokuでのプロセス実行コマンドの設定ファイルです。
+Herokuが入れないとやらんていってきたので入れました
+えらい
 
 ### runtime.txt
-Herokuでの実行環境の設定ファイルです。
+Herokuが起動しないぞ！！って言ってきたので入れました
+えらい
 
 ### app.json
-Herokuデプロイボタンの設定ファイルです。
+デプロイはこれがいるぞって言ってきたので入れました
+えらい
 
 ### .github/workflows/flake8.yaml
 GitHub Actions による自動構文チェックの設定ファイルです。
